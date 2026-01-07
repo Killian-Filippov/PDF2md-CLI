@@ -91,14 +91,14 @@
 
 ### Implementation for User Story 2
 
-- [ ] T031 [P] [US2] Implement config subcommand app in client/src/pdf2md_client/cli.py using typer.Typer() with init, show, set commands
-- [ ] T032 [US2] Implement config init command in client/src/pdf2md_client/cli.py with --server-url and --timeout flags, create ~/.pdf2md/config.json using ConfigManager.save_config()
-- [ ] T033 [US2] Implement config show command in client/src/pdf2md_client/cli.py displaying current config in readable format using ConfigManager.load_config()
-- [ ] T034 [US2] Implement config set command in client/src/pdf2md_client/cli.py accepting key and value arguments, updating config using ConfigManager.load_config(), modifying field, saving with ConfigManager.save_config()
-- [ ] T035 [US2] Implement config file validation in client/src/pdf2md_client/cli.py with error messages for invalid JSON, backup corrupted files with timestamp
-- [ ] T036 [US2] Add config app to main CLI app in client/src/pdf2md_client/cli.py using app.add_typer(config_app, name="config")
-- [ ] T037 [US2] Implement environment variable support in client/src/pdf2md_client/config.py using pydantic-settings with env_prefix="PDF2MD_"
-- [ ] T038 [US2] Implement config hierarchy in client/src/pdf2md_client/cli.py (CLI flags override config file, config file overrides defaults)
+- [X] T031 [P] [US2] Implement config subcommand app in client/src/pdf2md_client/cli.py using typer.Typer() with init, show, set commands
+- [X] T032 [US2] Implement config init command in client/src/pdf2md_client/cli.py with --server-url and --timeout flags, create ~/.pdf2md/config.json using ConfigManager.save_config()
+- [X] T033 [US2] Implement config show command in client/src/pdf2md_client/cli.py displaying current config in readable format using ConfigManager.load_config()
+- [X] T034 [US2] Implement config set command in client/src/pdf2md_client/cli.py accepting key and value arguments, updating config using ConfigManager.load_config(), modifying field, saving with ConfigManager.save_config()
+- [X] T035 [US2] Implement config file validation in client/src/pdf2md_client/cli.py with error messages for invalid JSON, backup corrupted files with timestamp
+- [X] T036 [US2] Add config app to main CLI app in client/src/pdf2md_client/cli.py using app.add_typer(config_app, name="config")
+- [X] T037 [US2] Implement environment variable support in client/src/pdf2md_client/config.py using pydantic-settings with env_prefix="PDF2MD_"
+- [X] T038 [US2] Implement config hierarchy in client/src/pdf2md_client/cli.py (CLI flags override config file, config file overrides defaults)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - users can convert PDFs and manage configuration
 
@@ -112,10 +112,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T039 [US3] Extend convert command in client/src/pdf2md_client/cli.py to support --output flag (already exists in T021, ensure it works with ConversionOptions.get_output_path())
-- [ ] T040 [US3] Implement output directory creation in client/src/pdf2md_client/file_handler.py if --output directory doesn't exist (mkdir -p)
-- [ ] T041 [US3] Validate output directory path in client/src/pdf2md_client/cli.py (must be directory, not file path; if existing file, display error asking for directory)
-- [ ] T042 [US3] Update ConversionOptions.get_output_path() in client/src/pdf2md_client/config.py to use custom output_dir when specified
+- [X] T039 [US3] Extend convert command in client/src/pdf2md_client/cli.py to support --output flag (already exists in T021, ensure it works with ConversionOptions.get_output_path())
+- [X] T040 [US3] Implement output directory creation in client/src/pdf2md_client/file_handler.py if --output directory doesn't exist (mkdir -p)
+- [X] T041 [US3] Validate output directory path in client/src/pdf2md_client/cli.py (must be directory, not file path; if existing file, display error asking for directory)
+- [X] T042 [US3] Update ConversionOptions.get_output_path() in client/src/pdf2md_client/config.py to use custom output_dir when specified
 
 **Checkpoint**: All user stories 1-3 should now be independently functional - users can convert PDFs to custom locations
 
@@ -129,11 +129,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T043 [P] [US4] Add logging configuration in client/src/pdf2md_client/client.py using structlog or standard logging module
-- [ ] T044 [US4] Implement verbose mode logging in client/src/pdf2md_client/client.py with log levels: INFO (normal), DEBUG (verbose)
-- [ ] T045 [US4] Add verbose logging to _convert_async() in client/src/pdf2md_client/cli.py for: config loading, file validation, server connection, upload/download progress, conversion timing
-- [ ] T046 [US4] Implement stack trace display in client/src/pdf2md_client/cli.py for exceptions when verbose mode enabled
-- [ ] T047 [US4] Add HTTP request/response logging in client/src/pdf2md_client/client.py when verbose mode is enabled
+- [X] T043 [P] [US4] Add logging configuration in client/src/pdf2md_client/client.py using structlog or standard logging module
+- [X] T044 [US4] Implement verbose mode logging in client/src/pdf2md_client/client.py with log levels: INFO (normal), DEBUG (verbose)
+- [X] T045 [US4] Add verbose logging to _convert_async() in client/src/pdf2md_client/cli.py for: config loading, file validation, server connection, upload/download progress, conversion timing
+- [X] T046 [US4] Implement stack trace display in client/src/pdf2md_client/cli.py for exceptions when verbose mode enabled
+- [X] T047 [US4] Add HTTP request/response logging in client/src/pdf2md_client/client.py when verbose mode is enabled
 
 **Checkpoint**: User Stories 1-4 should now be functional - users can convert PDFs with detailed debugging output
 
@@ -147,10 +147,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T048 [P] [US5] Implement file conflict check in client/src/pdf2md_client/file_handler.py check_output_conflict() function
-- [ ] T049 [US5] Add interactive prompt in client/src/pdf2md_client/cli.py when output file exists and --overwrite not set: "File exists. Overwrite? [y/N]"
-- [ ] T050 [US5] Implement overwrite flag bypass in client/src/pdf2md_client/cli.py to skip prompt when --overwrite is True
-- [ ] T051 [US5] Use questionary or typer.Confirm in client/src/pdf2md_client/cli.py for user prompt (or simple input() in try/except)
+- [X] T048 [P] [US5] Implement file conflict check in client/src/pdf2md_client/file_handler.py check_output_conflict() function
+- [X] T049 [US5] Add interactive prompt in client/src/pdf2md_client/cli.py when output file exists and --overwrite not set: "File exists. Overwrite? [y/N]"
+- [X] T050 [US5] Implement overwrite flag bypass in client/src/pdf2md_client/cli.py to skip prompt when --overwrite is True
+- [X] T051 [US5] Use questionary or typer.Confirm in client/src/pdf2md_client/cli.py for user prompt (or simple input() in try/except)
 
 **Checkpoint**: All user stories should now be complete - full CLI functionality with all user stories independently testable
 

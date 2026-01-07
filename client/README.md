@@ -4,6 +4,24 @@ Client CLI for PDF2md - Convert PDF files to Markdown using a remote GPU-enabled
 
 ## Installation
 
+### Prerequisites
+
+- **uv** package manager (required - see [Constitution](../../.specify/memory/constitution.md))
+- Python 3.11+
+
+### Install uv
+
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or with pip (not recommended for production)
+pip install uv
+```
+
 ### From Source
 
 ```bash
@@ -11,18 +29,18 @@ Client CLI for PDF2md - Convert PDF files to Markdown using a remote GPU-enabled
 git clone https://github.com/your-org/pdf2md-cli.git
 cd pdf2md-cli/client
 
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+# Install dependencies and create virtual environment
+uv sync
 
-# Install in development mode
-pip install -e .
+# Activate virtual environment
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 ```
 
-### With pip
+### With uv (Recommended)
 
 ```bash
-pip install pdf2md-client
+# Add to project
+uv add pdf2md-client
 ```
 
 ## Quick Start
@@ -157,48 +175,64 @@ pdf2md config set overwrite true
 
 ## Development
 
+### Adding Dependencies
+
+```bash
+# Add runtime dependency
+uv add typer
+
+# Add dev dependency
+uv add --dev pytest
+
+# Remove dependency
+uv remove typer
+```
+
 ### Running Tests
 
 ```bash
-# Install dev dependencies
-pip install -e ".[dev]"
-
 # Run all tests
-pytest
+uv run pytest
 
 # Run with coverage
-pytest --cov=src --cov-report=html
+uv run pytest --cov=src --cov-report=html
 
 # Run specific test
-pytest tests/unit/test_config.py
+uv run pytest tests/unit/test_config.py
 ```
 
 ### Code Quality
 
 ```bash
 # Format code
-ruff format src/ tests/
+uv run ruff format src/ tests/
 
 # Lint code
-ruff check src/ tests/
+uv run ruff check src/ tests/
 
 # Type checking
-mypy src/
+uv run mypy src/
+
+# Run commands without activating venv
+uv run <command>
 ```
 
 ## Troubleshooting
 
 ### "Command not found: pdf2md"
 
-**Cause**: CLI not installed or not in PATH
+**Cause**: CLI not installed or virtual environment not activated
 
 **Solution**:
 ```bash
-# Reinstall with pip
-pip install -e .
+# Ensure dependencies are installed
+uv sync
 
-# Or add to PATH (if using virtualenv)
-export PATH="$PATH:$(pwd)/.venv/bin"
+# Activate virtual environment
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Or use uv run without activation
+uv run pdf2md --help
 ```
 
 ### "Network Error: Cannot connect to server"
