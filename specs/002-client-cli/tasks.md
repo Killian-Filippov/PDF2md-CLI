@@ -40,15 +40,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Create exception hierarchy in client/src/pdf2md_client/exceptions.py (PDF2MDError base, NetworkError, ValidationError, ConversionError, ConfigError with subclasses)
-- [ ] T008 [P] Implement ServerConfig Pydantic model in client/src/pdf2md_client/config.py with field validators (server_url, timeout, chunk_size, max_retries, verify_ssl, output_dir, overwrite)
-- [ ] T009 [P] Implement ConfigManager in client/src/pdf2md_client/config_manager.py with load_config(), save_config(), _handle_corrupted_config(), set_secure_permissions()
-- [ ] T010 [P] Create CLIOutput wrapper using Rich in client/src/pdf2md_client/output.py with Console, THEME, _detect_unicode_support(), success(), error(), info(), warning() methods
-- [ ] T011 [P] Implement FileHandler in client/src/pdf2md_client/file_handler.py with validate_pdf_file(), check_output_conflict(), save_markdown() functions
-- [ ] T012 Create ConversionOptions Pydantic model in client/src/pdf2md_client/config.py with input_path, output_path, output_dir, overwrite, verbose, server_url, timeout, get_output_path()
-- [ ] T013 Create ConversionResult Pydantic model in client/src/pdf2md_client/config.py with success, output_path, page_count, duration, file_size, error
-- [ ] T014 Configure pytest in client/pyproject.toml with pytest-asyncio plugin and test dependencies
-- [ ] T015 Create __init__.py in client/src/pdf2md_client/ exporting public classes (ServerConfig, ConfigManager, ConversionOptions, ConversionResult, PDF2MDError, CLIOutput)
+- [X] T007 Create exception hierarchy in client/src/pdf2md_client/exceptions.py (PDF2MDError base, NetworkError, ValidationError, ConversionError, ConfigError with subclasses)
+- [X] T008 [P] Implement ServerConfig Pydantic model in client/src/pdf2md_client/config.py with field validators (server_url, timeout, chunk_size, max_retries, verify_ssl, output_dir, overwrite)
+- [X] T009 [P] Implement ConfigManager in client/src/pdf2md_client/config_manager.py with load_config(), save_config(), _handle_corrupted_config(), set_secure_permissions()
+- [X] T010 [P] Create CLIOutput wrapper using Rich in client/src/pdf2md_client/output.py with Console, THEME, _detect_unicode_support(), success(), error(), info(), warning() methods
+- [X] T011 [P] Implement FileHandler in client/src/pdf2md_client/file_handler.py with validate_pdf_file(), check_output_conflict(), save_markdown() functions
+- [X] T012 Create ConversionOptions Pydantic model in client/src/pdf2md_client/config.py with input_path, output_path, output_dir, overwrite, verbose, server_url, timeout, get_output_path()
+- [X] T013 Create ConversionResult Pydantic model in client/src/pdf2md_client/config.py with success, output_path, page_count, duration, file_size, error
+- [X] T014 Configure pytest in client/pyproject.toml with pytest-asyncio plugin and test dependencies
+- [X] T015 Create __init__.py in client/src/pdf2md_client/ exporting public classes (ServerConfig, ConfigManager, ConversionOptions, ConversionResult, PDF2MDError, CLIOutput)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
