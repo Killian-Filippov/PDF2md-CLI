@@ -111,9 +111,8 @@ Multiple clients can submit conversion requests simultaneously without server cr
 ### Functional Requirements
 
 **POST /convert Endpoint**:
-- **FR-API-001**: Server MUST accept POST requests at `/convert` endpoint
-- **FR-API-002**: Server MUST accept `multipart/form-data` content type with file field
-- **FR-API-003**: Server MUST validate file extension is `.pdf` (case-insensitive)
+- **FR-API-001**: Server MUST accept POST requests at `/convert` endpoint with `multipart/form-data` content type and `file` field
+- **FR-API-002**: (DEPRECATED - merged into FR-API-001)
 - **FR-API-004**: Server MUST validate file magic bytes start with `%PDF-`
 - **FR-API-004a**: Server MUST detect PDF encryption flag and reject password-protected files with 400 error and message "PDF is password-protected and cannot be converted. Please remove the password and try again."
 - **FR-API-005**: Server MUST sanitize filename to remove path traversal and dangerous characters
@@ -156,11 +155,8 @@ Multiple clients can submit conversion requests simultaneously without server cr
 - **FR-API-033**: Server MUST include GZip middleware for response compression
 - **FR-API-034**: Server MUST include CORS middleware (allow all origins for internal network)
 - **FR-API-035**: Server MUST generate unique `X-Request-ID` for each request
-- **FR-API-036**: Server MUST log request ID with all log messages for tracing
-- **FR-API-036a**: Server MUST support human-readable text log format by default (development mode)
-- **FR-API-036b**: Server MUST support structured JSON log format when `PDF2MD_LOG_FORMAT=json` environment variable is set (production mode)
-- **FR-API-036c**: JSON log entries MUST include `timestamp`, `level`, `request_id`, `message`, and optional `context` fields
-- **FR-API-036d**: Text log entries MUST follow format `[timestamp] [level] [request_id] message`
+- **FR-API-036**: Server MUST log request ID with all log messages for tracing, supporting both text (default) and JSON (via `PDF2MD_LOG_FORMAT=json` env var) formats with fields: `timestamp`, `level`, `request_id`, `message`, optional `context`
+- **FR-API-036a-d**: (DEPRECATED - merged into FR-API-036)
 
 **Concurrency and Resource Management**:
 - **FR-API-037**: Server MUST use asyncio semaphore to limit concurrent conversions (max 10)
@@ -187,6 +183,7 @@ Multiple clients can submit conversion requests simultaneously without server cr
 **ConversionRequest**:
 - Represents incoming conversion request
 - Attributes: file (UploadFile), filename, file_size, content_type, client_ip, request_id
+- client_ip source: Extracted from `X-Forwarded-For` header if present (proxy/load balancer), otherwise from direct connection `client.host`
 
 **ConversionResponse**:
 - Represents successful conversion response
@@ -213,7 +210,7 @@ Multiple clients can submit conversion requests simultaneously without server cr
 ### Measurable Outcomes
 
 - **SC-API-001**: API endpoints respond within 500ms for metadata requests (health check)
-- **SC-API-002**: File upload throughput reaches at least 100 MB/s over gigabit network
+- **SC-API-002**: File upload throughput reaches at least 100 MB/s per client on gigabit network (measured from client start to server disk write completion)
 - **SC-API-003**: Server can handle 10 concurrent conversion requests without errors
 - **SC-API-004**: Memory usage stays under 2GB with 5 concurrent large file (100MB) uploads
 - **SC-API-005**: Error responses are returned in under 100ms (fast validation)

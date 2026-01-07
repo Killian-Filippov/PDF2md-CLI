@@ -257,9 +257,9 @@ Phase 8: Polish & Cross-Cutting
 - [ ] [T077] [P3] [Story5] Launch each conversion in `asyncio.create_task()` with complete exception isolation (server/src/pdf2md_server/services/conversion.py)
 - [ ] [T078] [P3] [Story5] Wrap task execution in try/except that logs errors with request_id without raising to main event loop (server/src/pdf2md_server/services/conversion.py)
 - [ ] [T079] [P3] [Story5] Ensure failed task cleans up its temp files and releases semaphore before exiting (server/src/pdf2md_server/services/conversion.py)
-- [ ] [T080] [P3] [Story5] Write integration test that verifies one conversion failure doesn't affect other concurrent conversions (tests/integration/test_convert_api.py)
+- [ ] [T080] [P3] [Story5] Write integration test that verifies one conversion failure doesn't affect other concurrent conversions or crash server (tests/integration/test_convert_api.py)
 
-**Test Criteria**: Submit 5 concurrent requests, 1 with corrupted PDF. 4 succeed, 1 fails with 500. No cascading failures. All temp files cleaned up.
+**Test Criteria**: Submit 5 concurrent requests, 1 with corrupted PDF. 4 succeed with 200 OK, 1 fails with 500. No cascading failures. Server remains healthy (health check returns 200). All temp files cleaned up. Server event loop continues processing requests after failure.
 
 **Acceptance**: Sending 10 concurrent POST /convert requests with valid PDFs results in all 10 completing successfully with 200 OK responses.
 

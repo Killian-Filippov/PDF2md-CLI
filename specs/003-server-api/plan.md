@@ -78,14 +78,15 @@ Implement a FastAPI-based REST server for GPU-accelerated PDF to Markdown conver
 - Async HTTP client for testing (httpx.AsyncClient)
 - No synchronous file uploads or blocking I/O in request handlers
 
-### ⚠️ IV. Type Safety
+### ✅ IV. Type Safety
 
-**Partial Compliance**: Type hints required but relaxed for MVP:
+**Compliance**: Strict type hints enforced per constitution:
 - All public functions have type hints
 - Pydantic models for request/response validation
-- mypy enabled with `disallow_untyped_defs = false` (relaxed)
-- Rationale: FastAPI dynamic endpoint parameters require flexibility
-- Action item: Re-evaluate strict typing post-MVP
+- mypy enabled with `disallow_untyped_defs = true` (strict)
+- FastAPI UploadFile parameters typed as `UploadFile` with `Annotated[UploadFile, File()]` for full type safety
+- Route handlers use `-> Response` return type annotations
+- All service methods have full parameter and return type hints
 
 ### ✅ V. Error Handling
 

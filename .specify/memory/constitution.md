@@ -146,6 +146,7 @@ source .venv/bin/activate  # Automatically managed by uv
 - HTTP Client: httpx (async)
 - Data Validation: Pydantic v2+
 - Terminal Output: Rich
+- PDF Conversion (Server): marker-pdf (GPU-enabled OCR)
 
 **Prohibited**:
 - pip (use uv instead)
