@@ -124,7 +124,7 @@ A user wants to overwrite an existing Markdown file without being prompted.
 - **FR-CLI-013**: System MUST display upload progress bar with bytes transferred and percentage
 - **FR-CLI-014**: System MUST display "Converting..." message with animated pulse indicator during server processing (e.g., "Converting... [●    ]" updates every 0.5s)
 - **FR-CLI-015**: System MUST display download progress bar for Markdown file
-- **FR-CLI-016**: Progress bars MUST use `tqdm` library for consistent format
+- **FR-CLI-016**: Progress bars MUST use cross-platform compatible library with consistent format and Unicode support
 
 **User Feedback**:
 - **FR-CLI-017**: System MUST display checkmark (✓) for success indicators
@@ -174,7 +174,7 @@ A user wants to overwrite an existing Markdown file without being prompted.
 
 ### Measurable Outcomes
 
-- **SC-CLI-001**: Users can run basic conversion command with zero prior knowledge (intuitive interface)
+- **SC-CLI-001**: Help command displays all available commands and flags within 10 seconds of first run
 - **SC-CLI-002**: Help command displays all available commands and flags in clear format
 - **SC-CLI-003**: Configuration commands complete in under 2 seconds
 - **SC-CLI-004**: Progress bars update smoothly without flickering or delay

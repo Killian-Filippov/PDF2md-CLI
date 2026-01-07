@@ -18,8 +18,7 @@ Implement the client-side CLI interface for PDF2md-CLI that enables users to con
 - `typer` - CLI framework with type hints
 - `httpx` - Async HTTP client for file upload/download
 - `pydantic` - Configuration validation and settings management
-- `tqdm` - Progress bars for upload/download
-- `questionary` - Interactive prompts (for config init)
+- `rich` - Terminal colors, progress bars, and Unicode support
 
 **Storage**: JSON configuration file at `~/.pdf2md/config.json`
 **Testing**: `pytest` with `pytest-asyncio` for async client tests
@@ -40,13 +39,13 @@ Implement the client-side CLI interface for PDF2md-CLI that enables users to con
 - ~30-40 functional requirements (FR-CLI-001 through FR-CLI-032)
 - Single file conversion only (no batch processing in MVP)
 
-## Constitution Check
+## Architecture Principles Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Status**: Constitution template not yet customized for this project.
+**Status**: Principles validated against architecture design.
 
-**Pending Principles** (from architecture design):
+**Core Principles**:
 - **SOLID**: Single responsibility - CLI only handles user interaction, not business logic
 - **DRY**: Shared utilities in common modules, no duplicated code
 - **YAGNI**: MVP features only (no batch processing, no daemon mode)
@@ -79,7 +78,7 @@ client/                  # Client component
 │       ├── client.py           # HTTP client for upload/download
 │       ├── file_handler.py     # File validation, conflict checking
 │       ├── exceptions.py       # Custom exception hierarchy
-│       └── progress.py         # Progress bar helpers (tqdm wrappers)
+│       └── output.py           # CLI output wrapper using Rich
 │
 ├── tests/
 │   ├── unit/
