@@ -5,6 +5,16 @@
 **Status**: Draft
 **Input**: Architecture design document - Section 4.1 (Client Component Design)
 
+## Clarifications
+
+### Session 2026-01-07
+
+- Q: How should CLI handle edge cases like directory paths, multiple files, or invalid inputs? → A: Fast-fail with clear error messages and exit code 3 (validation error)
+- Q: What is the network retry strategy for connection failures? → A: Exponential backoff (2s → 4s → 8s), max 3 retries, no retry on HTTP 4xx errors
+- Q: What happens when server is completely unreachable after all retries? → A: Display detailed troubleshooting guide and exit with code 2
+- Q: Where should file size validation be performed? → A: Both client-side (before upload) and server-side (safety net)
+- Q: How should "Converting..." progress be displayed during server processing? → A: Static message with animated pulse indicator (e.g., "[●    ]") updates every 0.5s
+
 ## User Scenarios & Testing
 
 ### User Story 1 - Basic PDF Conversion Command (Priority: P1)
@@ -81,13 +91,14 @@ A user wants to overwrite an existing Markdown file without being prompted.
 
 ## Edge Cases
 
-- What happens if user provides a directory path instead of a file path?
-- What happens if user provides multiple PDF files?
-- What happens if PDF file path contains spaces or special characters?
-- What happens if user runs command without arguments?
-- What happens if user runs command from a different working directory?
-- What happens if configuration file is corrupted or invalid JSON?
-- What happens if user specifies `--output` as a file path (not directory)?
+- **Directory path provided**: Display error "Expected a PDF file, not a directory" and exit with code 3 (validation error)
+- **Multiple PDF files**: Display error "Expected exactly one PDF file path" and exit with code 3
+- **Spaces/special characters in path**: Support paths with spaces and special characters (require proper quoting in shell)
+- **No arguments provided**: Display usage help and exit with code 3
+- **Different working directory**: Resolve relative paths from current working directory; absolute paths work as-is
+- **Corrupted configuration file**: Backup corrupted file with timestamp, use defaults, display warning message
+- **`--output` as file path**: Treat as output directory path; if it's an existing file, display error asking for directory path
+- **Server completely unreachable**: After all retries exhausted, display detailed troubleshooting guide (check server status, network connectivity, configuration) and exit with code 2
 
 ## Requirements
 
@@ -111,7 +122,7 @@ A user wants to overwrite an existing Markdown file without being prompted.
 
 **Progress Display**:
 - **FR-CLI-013**: System MUST display upload progress bar with bytes transferred and percentage
-- **FR-CLI-014**: System MUST display "Converting..." message during server processing
+- **FR-CLI-014**: System MUST display "Converting..." message with animated pulse indicator during server processing (e.g., "Converting... [●    ]" updates every 0.5s)
 - **FR-CLI-015**: System MUST display download progress bar for Markdown file
 - **FR-CLI-016**: Progress bars MUST use `tqdm` library for consistent format
 
@@ -128,14 +139,22 @@ A user wants to overwrite an existing Markdown file without being prompted.
 - **FR-CLI-024**: System MUST validate file is readable (permissions check)
 - **FR-CLI-025**: System MUST validate output directory exists or can be created
 - **FR-CLI-026**: System MUST display clear error if validation fails
+- **FR-CLI-027**: System MUST validate file size does not exceed 500MB before upload (client-side validation)
+- **FR-CLI-028**: System MUST display error with actual size and limit when file too large
 
 **Exit Codes**:
-- **FR-CLI-027**: System MUST exit with code 0 on successful conversion
-- **FR-CLI-028**: System MUST exit with code 1 for generic errors
-- **FR-CLI-029**: System MUST exit with code 2 for network errors
-- **FR-CLI-030**: System MUST exit with code 3 for validation errors
-- **FR-CLI-031**: System MUST exit with code 4 for conversion errors
-- **FR-CLI-032**: System MUST exit with code 5 for configuration errors
+- **FR-CLI-029**: System MUST exit with code 0 on successful conversion
+- **FR-CLI-030**: System MUST exit with code 1 for generic errors
+- **FR-CLI-031**: System MUST exit with code 2 for network errors
+- **FR-CLI-032**: System MUST exit with code 3 for validation errors
+- **FR-CLI-033**: System MUST exit with code 4 for conversion errors
+- **FR-CLI-034**: System MUST exit with code 5 for configuration errors
+
+**Network Retry Strategy**:
+- **FR-CLI-035**: System MUST retry on connection failures and timeouts with exponential backoff (2s → 4s → 8s)
+- **FR-CLI-036**: System MUST stop retrying after max_retries attempts (default: 3)
+- **FR-CLI-037**: System MUST NOT retry on HTTP 4xx errors (client errors)
+- **FR-CLI-038**: System MUST display retry attempt number to user during backoff waits
 
 ### Key Entities
 
