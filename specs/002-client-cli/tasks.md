@@ -62,22 +62,22 @@
 
 ### Implementation for User Story 1
 
-- [ ] T016 [P] [US1] Implement async PDF2MDClient class in client/src/pdf2md_client/client.py with __aenter__, __aexit__, convert_pdf(), _upload_pdf(), _wait_for_conversion(), _download_markdown() methods
-- [ ] T017 [P] [US1] Implement _upload_pdf() in client/src/pdf2md_client/client.py with httpx multipart file upload, Rich progress bar, file size validation (500MB max)
-- [ ] T018 [P] [US1] Implement _wait_for_conversion() in client/src/pdf2md_client/client.py with server polling logic and "Converting... [●    ]" animated pulse indicator every 0.5s
-- [ ] T019 [P] [US1] Implement _download_markdown() in client/src/pdf2md_client/client.py with httpx streaming download, Rich progress bar
-- [ ] T020 [P] [US1] Implement exponential backoff retry logic in client/src/pdf2md_client/client.py (2s→4s→8s, max 3 retries, display retry attempt number)
-- [ ] T020a [US1] Implement --version flag in client/src/pdf2md_client/cli.py using typer.Option to display version information
-- [ ] T021 [US1] Implement main convert command in client/src/pdf2md_client/cli.py using typer with pdf_file Path argument, --output Path option, --overwrite bool option, --verbose bool option
-- [ ] T022 [US1] Implement convert command argument validation in client/src/pdf2md_client/cli.py (validate exactly one PDF path, file exists, readable, PDF format, <500MB)
-- [ ] T023 [US1] Implement async bridge in client/src/pdf2md_client/cli.py with asyncio.run(_convert_async()) wrapper and KeyboardInterrupt handler (exit 130)
-- [ ] T024 [US1] Implement config merging in client/src/pdf2md_client/cli.py (CLI flags > environment variables > config file > defaults)
-- [ ] T025 [US1] Implement edge case error messages in client/src/pdf2md_client/cli.py (directory path, multiple files, no arguments, corrupted config with troubleshooting hints)
-- [ ] T026 [US1] Implement success message display in client/src/pdf2md_client/cli.py with "✓ Converted: {filename} ({pages} pages, {time:.1f}s)" format using CLIOutput.success()
-- [ ] T027 [US1] Implement error message display in client/src/pdf2md_client/cli.py using CLIOutput.error() with error type, description, troubleshooting hints, proper exit codes (0-5, 130)
-- [ ] T028 [US1] Implement verbose mode in client/src/pdf2md_client/cli.py with detailed timing, HTTP requests, server responses, stack traces on errors
-- [ ] T029 [US1] Implement file overwrite check in client/src/pdf2md_client/cli.py with prompt "File exists. Overwrite? [y/N]" when output exists and --overwrite not set
-- [ ] T030 [US1] Add entry point in client/pyproject.toml: [console_scripts] pdf2md = "pdf2md_client.cli:app"
+- [X] T016 [P] [US1] Implement async PDF2MDClient class in client/src/pdf2md_client/client.py with __aenter__, __aexit__, convert_pdf(), _upload_pdf(), _wait_for_conversion(), _download_markdown() methods
+- [X] T017 [P] [US1] Implement _upload_pdf() in client/src/pdf2md_client/client.py with httpx multipart file upload, Rich progress bar, file size validation (500MB max)
+- [X] T018 [P] [US1] Implement _wait_for_conversion() in client/src/pdf2md_client/client.py with server polling logic and "Converting... [●    ]" animated pulse indicator every 0.5s
+- [X] T019 [P] [US1] Implement _download_markdown() in client/src/pdf2md_client/client.py with httpx streaming download, Rich progress bar
+- [X] T020 [P] [US1] Implement exponential backoff retry logic in client/src/pdf2md_client/client.py (2s→4s→8s, max 3 retries, display retry attempt number)
+- [X] T020a [US1] Implement --version flag in client/src/pdf2md_client/cli.py using typer.Option to display version information
+- [X] T021 [US1] Implement main convert command in client/src/pdf2md_client/cli.py using typer with pdf_file Path argument, --output Path option, --overwrite bool option, --verbose bool option
+- [X] T022 [US1] Implement convert command argument validation in client/src/pdf2md_client/cli.py (validate exactly one PDF path, file exists, readable, PDF format, <500MB)
+- [X] T023 [US1] Implement async bridge in client/src/pdf2md_client/cli.py with asyncio.run(_convert_async()) wrapper and KeyboardInterrupt handler (exit 130)
+- [X] T024 [US1] Implement config merging in client/src/pdf2md_client/cli.py (CLI flags > environment variables > config file > defaults)
+- [X] T025 [US1] Implement edge case error messages in client/src/pdf2md_client/cli.py (directory path, multiple files, no arguments, corrupted config with troubleshooting hints)
+- [X] T026 [US1] Implement success message display in client/src/pdf2md_client/cli.py with "✓ Converted: {filename} ({pages} pages, {time:.1f}s)" format using CLIOutput.success()
+- [X] T027 [US1] Implement error message display in client/src/pdf2md_client/cli.py using CLIOutput.error() with error type, description, troubleshooting hints, proper exit codes (0-5, 130)
+- [X] T028 [US1] Implement verbose mode in client/src/pdf2md_client/cli.py with detailed timing, HTTP requests, server responses, stack traces on errors
+- [X] T029 [US1] Implement file overwrite check in client/src/pdf2md_client/cli.py with prompt "File exists. Overwrite? [y/N]" when output exists and --overwrite not set
+- [X] T030 [US1] Add entry point in client/pyproject.toml: [console_scripts] pdf2md = "pdf2md_client.cli:app"
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can run `pdf2md document.pdf` and get `document.md`
 
