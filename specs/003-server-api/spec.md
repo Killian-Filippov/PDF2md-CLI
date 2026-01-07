@@ -82,16 +82,29 @@ Multiple clients can submit conversion requests simultaneously without server cr
 
 ---
 
+## Clarifications
+
+### Session 2026-01-07
+
+- Q: When GPU runs out of memory during OCR, what recovery strategy should the server use? → A: Immediately release GPU memory, log warning, return 503 Service Unavailable with message suggesting client retry later. Avoid full CUDA context restart to prevent disrupting other concurrent conversions.
+- Q: At what disk space threshold should the server start rejecting new requests? → B: Reject new conversion requests when available disk space falls below 2GB to ensure sufficient space for conversion operations and temporary files.
+- Q: How should the server format logs for request tracing in concurrent scenarios? → C: Hybrid mode - human-readable text logs in development, switchable to structured JSON logs in production via `PDF2MD_LOG_FORMAT=json` environment variable
+- Q: How should concurrent conversion tasks handle failures to prevent cascading errors? → A: Complete isolation - each conversion task runs in independent asyncio.Task with try/except catching all exceptions, ensuring one task's failure does not propagate to other tasks or main event loop
+- Q: How should the server handle password-protected PDF files? → A: Fast-fail rejection - immediately detect PDF encryption flag after upload, return 400 Bad Request with error message "PDF is password-protected and cannot be converted. Please remove the password and try again.", do not attempt decryption or conversion
+
+---
+
 ## Edge Cases
 
 - What happens if client disconnects during file upload?
 - What happens if conversion fails halfway through?
-- What happens if server runs out of disk space?
-- What happens if PDF is password-protected?
+- What happens if server runs out of disk space? → Check available space on startup; reject new requests with 503 when available space < 2GB; clean up temp files immediately after conversion
+- What happens if PDF is password-protected? → Immediately detect encryption flag and return 400 with message "PDF is password-protected and cannot be converted. Please remove the password and try again."
 - What happens if PDF has malformed structure?
-- What happens if GPU runs out of memory during OCR?
+- What happens if GPU runs out of memory during OCR? → Release GPU memory, return 503 with retry suggestion
 - What happens if multiple files have same UUID (collision)?
 - What happens if temporary directory permissions are wrong?
+- What happens if one conversion task fails while others are running? → Task isolation ensures other tasks continue; failed task logs error and returns 500 to client without affecting active tasks
 
 ## Requirements
 
@@ -102,6 +115,7 @@ Multiple clients can submit conversion requests simultaneously without server cr
 - **FR-API-002**: Server MUST accept `multipart/form-data` content type with file field
 - **FR-API-003**: Server MUST validate file extension is `.pdf` (case-insensitive)
 - **FR-API-004**: Server MUST validate file magic bytes start with `%PDF-`
+- **FR-API-004a**: Server MUST detect PDF encryption flag and reject password-protected files with 400 error and message "PDF is password-protected and cannot be converted. Please remove the password and try again."
 - **FR-API-005**: Server MUST sanitize filename to remove path traversal and dangerous characters
 - **FR-API-006**: Server MUST reject files larger than 500MB with 400 error
 - **FR-API-007**: Server MUST save uploaded file to temporary directory with UUID prefix
@@ -119,8 +133,11 @@ Multiple clients can submit conversion requests simultaneously without server cr
 - **FR-API-017**: Server MUST return 400 for invalid file type with structured error JSON
 - **FR-API-018**: Server MUST return 400 for file size exceeded with max size in error message
 - **FR-API-019**: Server MUST return 400 for invalid PDF format with troubleshooting hints
+- **FR-API-019a**: Server MUST return 400 for password-protected PDF files with error message "PDF is password-protected and cannot be converted. Please remove the password and try again." and troubleshooting hint "Remove password protection using: pdftk input.pdf output output.pdf user_pw PROMPT"
 - **FR-API-020**: Server MUST return 500 for conversion errors with safe error messages
 - **FR-API-021**: Server MUST return 503 for GPU overloaded with `Retry-After` header
+- **FR-API-021a**: Server MUST return 503 for GPU out of memory with explicit "GPU out of memory" message, release GPU memory immediately, and suggest client retry after 30 seconds
+- **FR-API-021b**: Server MUST return 503 for insufficient disk space with explicit "Insufficient disk space" message and suggest client retry later
 - **FR-API-022**: All error responses MUST contain `error`, `detail`, and `troubleshooting` fields
 - **FR-API-023**: Error responses MUST NOT leak internal paths or stack traces to client
 
@@ -140,10 +157,17 @@ Multiple clients can submit conversion requests simultaneously without server cr
 - **FR-API-034**: Server MUST include CORS middleware (allow all origins for internal network)
 - **FR-API-035**: Server MUST generate unique `X-Request-ID` for each request
 - **FR-API-036**: Server MUST log request ID with all log messages for tracing
+- **FR-API-036a**: Server MUST support human-readable text log format by default (development mode)
+- **FR-API-036b**: Server MUST support structured JSON log format when `PDF2MD_LOG_FORMAT=json` environment variable is set (production mode)
+- **FR-API-036c**: JSON log entries MUST include `timestamp`, `level`, `request_id`, `message`, and optional `context` fields
+- **FR-API-036d**: Text log entries MUST follow format `[timestamp] [level] [request_id] message`
 
 **Concurrency and Resource Management**:
 - **FR-API-037**: Server MUST use asyncio semaphore to limit concurrent conversions (max 10)
 - **FR-API-038**: Server MUST reject new requests when at max concurrency with 503 error
+- **FR-API-038a**: Server MUST run each conversion task in independent asyncio.Task with complete exception isolation
+- **FR-API-038b**: Server MUST wrap each conversion task in try/except block catching all exceptions to prevent cascading failures
+- **FR-API-038c**: Server MUST log conversion task failures with request_id without affecting other active tasks
 - **FR-API-039**: Server MUST use temporary directory `/tmp/pdf2md/` for uploaded files
 - **FR-API-040**: Server MUST create temp directory on startup if it doesn't exist
 - **FR-API-041**: Server MUST set file permissions to 600 (owner read/write only)
@@ -153,8 +177,10 @@ Multiple clients can submit conversion requests simultaneously without server cr
 - **FR-API-043**: Server MUST run startup event handler to initialize resources
 - **FR-API-044**: Server MUST run shutdown event handler to clean up resources
 - **FR-API-045**: Startup MUST validate GPU availability and log warning if not present
-- **FR-API-046**: Shutdown MUST clean up temp directory (remove all files)
-- **FR-API-047**: Shutdown MUST wait for active conversions to complete (60 second timeout)
+- **FR-API-045a**: Startup MUST check available disk space and log warning if less than 5GB
+- **FR-API-046**: Server MUST check available disk space before each conversion and reject with 503 if less than 2GB available with message "Insufficient disk space"
+- **FR-API-047**: Shutdown MUST clean up temp directory (remove all files)
+- **FR-API-048**: Shutdown MUST wait for active conversions to complete (60 second timeout)
 
 ### Key Entities
 
@@ -177,6 +203,10 @@ Multiple clients can submit conversion requests simultaneously without server cr
 **TempFileInfo**:
 - Represents uploaded file info
 - Attributes: temp_path, original_filename, uuid, upload_time, file_size
+
+**LogConfig**:
+- Represents logging configuration
+- Attributes: format ("text" or "json"), level ("DEBUG", "INFO", "WARNING", "ERROR"), log_file_path (optional), structured_enabled (boolean)
 
 ## Success Criteria
 
