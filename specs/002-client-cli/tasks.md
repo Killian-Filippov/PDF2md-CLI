@@ -25,12 +25,12 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create client directory structure: client/src/pdf2md_client/, client/tests/unit, client/tests/integration, client/tests/fixtures/test_pdfs
-- [ ] T002 Create pyproject.toml in client/ with dependencies: typer>=0.9.0, httpx>=0.25.0, pydantic>=2.0.0, pydantic-settings>=2.0.0, rich>=14.0.0, platformdirs>=4.0.0
-- [ ] T003 Create README.md in client/ with installation and usage instructions
-- [ ] T004 [P] Create .gitignore in client/ excluding __pycache__/, *.pyc, .venv/, .pytest_cache/, *.egg-info/
-- [ ] T005 [P] Create client/tests/__init__.py and client/tests/fixtures/__init__.py
-- [ ] T006 [P] Create client/.env.example with example environment variables (PDF2MD_SERVER_URL, PDF2MD_TIMEOUT, etc.)
+- [X] T001 Create client directory structure: client/src/pdf2md_client/, client/tests/unit, client/tests/integration, client/tests/fixtures/test_pdfs
+- [X] T002 Create pyproject.toml in client/ with dependencies: typer>=0.9.0, httpx>=0.25.0, pydantic>=2.0.0, pydantic-settings>=2.0.0, rich>=14.0.0, platformdirs>=4.0.0
+- [X] T003 Create README.md in client/ with installation and usage instructions
+- [X] T004 [P] Create .gitignore in client/ excluding __pycache__/, *.pyc, .venv/, .pytest_cache/, *.egg-info/
+- [X] T005 [P] Create client/tests/__init__.py and client/tests/fixtures/__init__.py
+- [X] T006 [P] Create client/.env.example with example environment variables (PDF2MD_SERVER_URL, PDF2MD_TIMEOUT, etc.)
 
 ---
 
