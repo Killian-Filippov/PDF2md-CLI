@@ -95,3 +95,6 @@ pdf2md /path/to/document.pdf
 3. Implement client (CLI + HTTP client)
 4. Add configuration management
 5. Write documentation
+
+## Recent Changes
+- 001-architecture-design: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
