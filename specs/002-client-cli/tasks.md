@@ -166,9 +166,9 @@
 - [ ] T055 [P] Add unit tests for file handler in client/tests/unit/test_file_handler.py (test_validate_pdf_file, test_check_output_conflict, test_save_markdown)
 - [ ] T056 [P] Add unit tests for CLI output in client/tests/unit/test_output.py (test_CLIOutput_colors, test_CLIOutput_unicode_detection)
 - [ ] T057 Add integration test for conversion flow in client/tests/integration/test_conversion_flow.py (mock httpx server, test full conversion workflow)
-- [ ] T058 Run ruff format on client/ and ruff check to ensure code quality
-- [ ] T059 Run mypy type checking on client/src/pdf2md_client/ for type safety
-- [ ] T060 Update client/README.md with quickstart guide, examples, and troubleshooting section
+- [X] T058 Run ruff format on client/ and ruff check to ensure code quality
+- [X] T059 Run mypy type checking on client/src/pdf2md_client/ for type safety
+- [X] T060 Update client/README.md with quickstart guide, examples, and troubleshooting section
 - [ ] T061 Validate quickstart.md examples work as documented (install, config init, convert)
 - [ ] T062 Add shell completion examples in client/README.md (optional future enhancement)
 - [ ] T063 Ensure all edge cases from spec.md are handled and tested

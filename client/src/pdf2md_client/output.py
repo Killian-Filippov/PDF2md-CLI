@@ -5,7 +5,6 @@ progress bars, and Unicode support.
 """
 
 import sys
-from typing import Optional
 
 from rich.console import Console
 from rich.theme import Theme
@@ -114,7 +113,7 @@ class CLIOutput:
         if self.verbose:
             self.console.print(f"[DEBUG] {message}", style="dim")
 
-    def print(self, message: str, style: Optional[str] = None) -> None:
+    def print(self, message: str, style: str | None = None) -> None:
         """Print raw message with optional style.
 
         Args:

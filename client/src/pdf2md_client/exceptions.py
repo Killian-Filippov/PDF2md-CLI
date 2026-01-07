@@ -4,7 +4,6 @@ This module defines all custom exceptions used by the PDF2md client,
 with specific exit codes for CLI error handling.
 """
 
-from typing import Optional
 
 
 class PDF2MDError(Exception):
@@ -18,7 +17,7 @@ class PDF2MDError(Exception):
         self,
         message: str,
         exit_code: int = 1,
-        troubleshooting: Optional[list[str]] = None,
+        troubleshooting: list[str] | None = None,
     ) -> None:
         """Initialize the exception.
 
@@ -51,7 +50,7 @@ class NetworkError(PDF2MDError):
     def __init__(
         self,
         message: str,
-        troubleshooting: Optional[list[str]] = None,
+        troubleshooting: list[str] | None = None,
     ) -> None:
         """Initialize network error.
 
@@ -81,7 +80,7 @@ class ValidationError(PDF2MDError):
     def __init__(
         self,
         message: str,
-        troubleshooting: Optional[list[str]] = None,
+        troubleshooting: list[str] | None = None,
     ) -> None:
         """Initialize validation error.
 
@@ -111,7 +110,7 @@ class ConversionError(PDF2MDError):
     def __init__(
         self,
         message: str,
-        troubleshooting: Optional[list[str]] = None,
+        troubleshooting: list[str] | None = None,
     ) -> None:
         """Initialize conversion error.
 
@@ -141,7 +140,7 @@ class ConfigError(PDF2MDError):
     def __init__(
         self,
         message: str,
-        troubleshooting: Optional[list[str]] = None,
+        troubleshooting: list[str] | None = None,
     ) -> None:
         """Initialize configuration error.
 

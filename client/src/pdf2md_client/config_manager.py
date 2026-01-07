@@ -8,7 +8,6 @@ import os
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from platformdirs import user_config_dir
 

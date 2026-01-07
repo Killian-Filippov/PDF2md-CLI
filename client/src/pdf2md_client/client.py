@@ -6,7 +6,6 @@ Handles upload, conversion polling, and download of converted Markdown files.
 import asyncio
 import time
 from pathlib import Path
-from typing import Optional
 
 import httpx
 
@@ -33,7 +32,7 @@ class PDF2MDClient:
         self.output = output
 
         # HTTP client configuration
-        self.client: Optional[httpx.AsyncClient] = None
+        self.client: httpx.AsyncClient | None = None
 
     async def __aenter__(self) -> "PDF2MDClient":
         """Initialize async context manager.
@@ -233,9 +232,7 @@ class PDF2MDClient:
         while True:
             try:
                 # Check conversion status
-                response = await self.client.get(
-                    f"{self.options.server_url}/status/{task_id}"
-                )
+                response = await self.client.get(f"{self.options.server_url}/status/{task_id}")
                 response.raise_for_status()
 
                 result = response.json()
@@ -299,9 +296,7 @@ class PDF2MDClient:
                 self.output.debug(f"Downloading Markdown for task {task_id}...")
 
                 # Stream download for large files
-                response = await self.client.get(
-                    f"{self.options.server_url}/download/{task_id}"
-                )
+                response = await self.client.get(f"{self.options.server_url}/download/{task_id}")
                 response.raise_for_status()
 
                 # Read content

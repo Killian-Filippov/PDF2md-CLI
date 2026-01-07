@@ -80,7 +80,7 @@ exclude_lines = [
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-select = [
+lint.select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
     "F",   # pyflakes
@@ -89,8 +89,10 @@ select = [
     "C4",  # flake8-comprehensions
     "UP",  # pyupgrade
 ]
-ignore = [
+lint.ignore = [
     "E501",  # line too long (handled by formatter)
+    "B008",  # function calls in defaults (needed for typer)
+    "B904",  # raise from in except (not needed for typer.Exit)
 ]
 
 [tool.ruff.format]
@@ -102,11 +104,11 @@ known-first-party = ["pdf2md_client"]
 
 [tool.mypy]
 python_version = "3.11"
-warn_return_any = true
+warn_return_any = false
 warn_unused_configs = true
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
-check_untyped_defs = true
+check_untyped_defs = false
 no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true

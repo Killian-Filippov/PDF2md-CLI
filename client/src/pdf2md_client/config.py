@@ -4,9 +4,8 @@ This module defines Pydantic models for configuration and conversion options.
 """
 
 from pathlib import Path
-from typing import Optional
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -55,7 +54,7 @@ class ServerConfig(BaseSettings):
         description="Verify SSL certificates for HTTPS connections",
     )
 
-    output_dir: Optional[str] = Field(
+    output_dir: str | None = Field(
         default=None,
         description="Default output directory for converted files",
     )
@@ -93,7 +92,7 @@ class ServerConfig(BaseSettings):
 
     @field_validator("output_dir")
     @classmethod
-    def validate_output_dir(cls, v: Optional[str]) -> Optional[str]:
+    def validate_output_dir(cls, v: str | None) -> str | None:
         """Validate output directory if specified.
 
         Args:
@@ -125,13 +124,13 @@ class ConversionOptions:
     def __init__(
         self,
         input_path: Path,
-        output_path: Optional[Path] = None,
-        output_dir: Optional[Path] = None,
-        overwrite: Optional[bool] = None,
+        output_path: Path | None = None,
+        output_dir: Path | None = None,
+        overwrite: bool | None = None,
         verbose: bool = False,
-        server_url: Optional[str] = None,
-        timeout: Optional[int] = None,
-        config: Optional[ServerConfig] = None,
+        server_url: str | None = None,
+        timeout: int | None = None,
+        config: ServerConfig | None = None,
     ) -> None:
         """Initialize conversion options.
 
@@ -227,11 +226,11 @@ class ConversionResult:
     def __init__(
         self,
         success: bool,
-        output_path: Optional[Path] = None,
-        page_count: Optional[int] = None,
-        duration: Optional[float] = None,
-        file_size: Optional[int] = None,
-        error: Optional[str] = None,
+        output_path: Path | None = None,
+        page_count: int | None = None,
+        duration: float | None = None,
+        file_size: int | None = None,
+        error: str | None = None,
     ) -> None:
         """Initialize conversion result.
 

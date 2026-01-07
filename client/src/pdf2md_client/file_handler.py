@@ -94,7 +94,7 @@ class FileHandler:
                 raise ValidationError(
                     f"File too large: {size_mb:.1f}MB (max: {max_mb}MB)",
                     troubleshooting=[
-                        f"Split the PDF into smaller files",
+                        "Split the PDF into smaller files",
                         f"Current size: {size_mb:.1f}MB, maximum allowed: {max_mb}MB",
                         "Contact server administrator to increase limit",
                     ],

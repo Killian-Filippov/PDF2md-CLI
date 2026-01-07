@@ -7,7 +7,6 @@ server configuration and converting PDF files to Markdown.
 import asyncio
 import sys
 from pathlib import Path
-from typing import Optional
 
 import typer
 
@@ -45,12 +44,12 @@ def get_version() -> str:
 
 def _convert_async(
     pdf_file: Path,
-    output: Optional[Path] = None,
-    output_dir: Optional[Path] = None,
-    overwrite: Optional[bool] = None,
+    output: Path | None = None,
+    output_dir: Path | None = None,
+    overwrite: bool | None = None,
     verbose: bool = False,
-    server: Optional[str] = None,
-    timeout: Optional[int] = None,
+    server: str | None = None,
+    timeout: int | None = None,
 ) -> int:
     """Async conversion wrapper.
 
@@ -105,9 +104,8 @@ def _convert_async(
         # Perform conversion
         from pdf2md_client.client import PDF2MDClient
 
-        with output_obj.get_console().status(
-            "[bold blue]Converting PDF...", spinner="dots"
-        ):
+        with output_obj.get_console().status("[bold blue]Converting PDF...", spinner="dots"):
+
             async def do_convert() -> None:
                 async with PDF2MDClient(options, output_obj) as client:
                     result = await client.convert_pdf(pdf_file)
@@ -156,9 +154,10 @@ def convert(
         help="Path to PDF file to convert",
         exists=True,
     ),
-    output: Optional[Path] = typer.Option(
+    output: Path | None = typer.Option(
         None,
-        "--output", "-o",
+        "--output",
+        "-o",
         help="Custom output directory or file path",
     ),
     overwrite: bool = typer.Option(
@@ -168,17 +167,20 @@ def convert(
     ),
     verbose: bool = typer.Option(
         False,
-        "--verbose", "-v",
+        "--verbose",
+        "-v",
         help="Enable verbose logging",
     ),
-    server: Optional[str] = typer.Option(
+    server: str | None = typer.Option(
         None,
-        "--server", "-s",
+        "--server",
+        "-s",
         help="Override server URL",
     ),
-    timeout: Optional[int] = typer.Option(
+    timeout: int | None = typer.Option(
         None,
-        "--timeout", "-t",
+        "--timeout",
+        "-t",
         help="Override request timeout (seconds)",
     ),
 ) -> None:
@@ -333,32 +335,36 @@ def config_set(
         # Convert value to appropriate type
         if hasattr(config, field_name):
             field_type = type(getattr(config, field_name))
+            converted_value: object
 
             # Handle boolean values
-            if field_type == bool:
+            if field_type is bool:
                 if value.lower() in ("true", "1", "yes"):
-                    value = True
+                    converted_value = True
                 elif value.lower() in ("false", "0", "no"):
-                    value = False
+                    converted_value = False
                 else:
                     output.error(f"Invalid boolean value: {value}")
                     raise typer.Exit(code=3)
 
             # Handle integer values
-            elif field_type == int:
+            elif field_type is int:
                 try:
-                    value = int(value)
+                    converted_value = int(value)
                 except ValueError:
                     output.error(f"Invalid integer value: {value}")
                     raise typer.Exit(code=3)
 
+            else:
+                converted_value = value
+
             # Update field
-            setattr(config, field_name, value)
+            setattr(config, field_name, converted_value)
 
             # Save config
             ConfigManager.save_config(config)
 
-            output.success(f"Configuration updated: {field_name} = {value}")
+            output.success(f"Configuration updated: {field_name} = {converted_value}")
 
         else:
             output.error(f"Unknown configuration key: {key}")
