@@ -1,0 +1,277 @@
+openapi: 3.1.0
+info:
+  title: PDF2md Conversion Service API
+  description: REST API for GPU-accelerated PDF to Markdown conversion
+  version: 1.0.0
+  contact:
+    name: PDF2md Team
+    email: dev@pdf2md.dev
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+tags:
+  - name: Conversion
+    description: PDF conversion endpoints
+  - name: Health
+    description: Health check endpoints
+
+paths:
+  /convert:
+    post:
+      tags:
+        - Conversion
+      summary: Convert PDF to Markdown
+      description: Upload a PDF file and convert it to Markdown format using GPU acceleration
+      operationId: convert_pdf
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: PDF file to convert (max 500MB)
+      responses:
+        '200':
+          description: Conversion successful
+          headers:
+            X-Request-ID:
+              description: Unique request identifier for tracing
+              schema:
+                type: string
+                format: uuid
+            X-Pages-Processed:
+              description: Number of pages processed
+              schema:
+                type: integer
+            X-Conversion-Time:
+              description: Conversion time in seconds
+              schema:
+                type: number
+                format: float
+            Content-Disposition:
+              description: File attachment header
+              schema:
+                type: string
+          content:
+            text/markdown:
+              schema:
+                type: string
+                example: "# Document Title\n\nConverted content..."
+        '400':
+          description: Bad request - validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidFileType:
+                  value:
+                    error_code: "InvalidRequest"
+                    error_detail: "File type not supported: .txt. Expected: .pdf"
+                    troubleshooting_hints:
+                      - "Ensure the file is a PDF document with .pdf extension"
+                    request_id: "abc-123-def"
+                    timestamp: 1704602645.123
+                encryptedPdf:
+                  value:
+                    error_code: "EncryptedPDF"
+                    error_detail: "PDF is password-protected and cannot be converted. Please remove the password and try again."
+                    troubleshooting_hints:
+                      - "Remove password protection using: pdftk input.pdf output output.pdf user_pw PROMPT"
+                      - "Verify PDF is not password-protected in PDF reader"
+                    request_id: "abc-123-def"
+                    timestamp: 1704602645.123
+                fileTooLarge:
+                  value:
+                    error_code: "FileTooLarge"
+                    error_detail: "File size (600.0 MB) exceeds maximum (500 MB)"
+                    troubleshooting_hints:
+                      - "Split the PDF into smaller files using: pdfjam input.pdf -- pages 1-100 -- output smaller.pdf"
+                      - "Compress the PDF using: gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -o output.pdf input.pdf"
+                    request_id: "abc-123-def"
+                    timestamp: 1704602645.123
+        '500':
+          description: Internal server error - conversion failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error_code: "ConversionError"
+                error_detail: "Conversion failed: PDF file is corrupted"
+                troubleshooting_hints:
+                  - "Try opening the file in a PDF reader to verify it's not corrupted"
+                  - "Re-download or recreate the PDF file"
+                request_id: "abc-123-def"
+                timestamp: 1704602645.123
+        '503':
+          description: Service unavailable - resource limit
+          headers:
+            Retry-After:
+              description: Suggested retry delay in seconds
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                gpuOom:
+                  value:
+                    error_code: "GPUOutOfMemory"
+                    error_detail: "GPU out of memory. Please retry after 30 seconds."
+                    troubleshooting_hints:
+                      - "Wait 30 seconds for GPU memory to be released"
+                      - "Reduce concurrent conversions"
+                    request_id: "abc-123-def"
+                    timestamp: 1704602645.123
+                diskSpace:
+                  value:
+                    error_code: "InsufficientDiskSpace"
+                    error_detail: "Server is temporarily out of disk space"
+                    troubleshooting_hints:
+                      - "Please try again later"
+                      - "Administrator: Check disk usage with 'df -h /tmp/pdf2md'"
+                    request_id: "abc-123-def"
+                    timestamp: 1704602645.123
+      x-codeSamples:
+        - lang: curl
+          label: cURL
+          source: |
+            curl -X POST http://localhost:8000/convert \
+              -F "file=@document.pdf" \
+              -O -J
+        - lang: python
+          label: Python (httpx)
+          source: |
+            import httpx
+
+            async with httpx.AsyncClient() as client:
+                with open("document.pdf", "rb") as f:
+                    response = await client.post(
+                        "http://localhost:8000/convert",
+                        files={"file": f}
+                    )
+                    markdown = response.text
+                    print(f"Pages: {response.headers['X-Pages-Processed']}")
+
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      description: Get server health status and metrics
+      operationId: health_check
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+              example:
+                status: healthy
+                version: "1.0.0"
+                gpu_available: true
+                active_conversions: 3
+                max_conversions: 10
+                uptime_seconds: 3600.5
+      x-codeSamples:
+        - lang: curl
+          label: cURL
+          source: |
+            curl http://localhost:8000/health
+        - lang: python
+          label: Python (httpx)
+          source: |
+            import httpx
+
+            async with httpx.AsyncClient() as client:
+                response = await client.get("http://localhost:8000/health")
+                health = response.json()
+                print(f"Status: {health['status']}")
+                print(f"Active conversions: {health['active_conversions']}")
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - error_code
+        - error_detail
+        - request_id
+        - timestamp
+      properties:
+        error_code:
+          type: string
+          description: Error type identifier
+          enum:
+            - InvalidRequest
+            - InvalidPDF
+            - EncryptedPDF
+            - FileTooLarge
+            - ConversionError
+            - GPUOutOfMemory
+            - InsufficientDiskSpace
+            - ServiceUnavailable
+        error_detail:
+          type: string
+          description: Human-readable error message
+        troubleshooting_hints:
+          type: array
+          items:
+            type: string
+          description: Actionable hints for resolving the error
+        request_id:
+          type: string
+          format: uuid
+          description: Unique request identifier for tracing
+        timestamp:
+          type: number
+          format: float
+          description: Unix timestamp
+
+    HealthStatus:
+      type: object
+      required:
+        - status
+        - version
+        - gpu_available
+        - active_conversions
+        - max_conversions
+        - uptime_seconds
+      properties:
+        status:
+          type: string
+          enum:
+            - healthy
+            - unhealthy
+          description: Server health status
+        version:
+          type: string
+          description: Server version string
+        gpu_available:
+          type: boolean
+          description: Whether GPU is available for conversions
+        active_conversions:
+          type: integer
+          minimum: 0
+          maximum: 10
+          description: Number of currently active conversions
+        max_conversions:
+          type: integer
+          enum: [10]
+          description: Maximum concurrent conversions (always 10)
+        uptime_seconds:
+          type: number
+          format: float
+          minimum: 0
+          description: Server uptime in seconds
