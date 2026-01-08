@@ -24,7 +24,7 @@ Implement a Python-based PDF to Markdown conversion engine using the Marker libr
 ## Technical Context
 
 **Language/Version**: Python 3.11+
-**Primary Dependencies**: marker-pdf (>=0.2.8), torch (CUDA 11.8+), Pillow (>=10.0.0), Pydantic (>=2.0.0)
+**Primary Dependencies**: marker-pdf (>=0.2.8), torch>=2.0.0 with CUDA 11.8 support, Pillow (>=10.0.0), Pydantic (>=2.0.0)
 **Storage**: Temporary file storage for extracted images (output directory)
 **Testing**: pytest (>=7.4.0), pytest-mock (>=3.12.0), pytest-cov (>=4.1.0)
 **Target Platform**: Linux server with NVIDIA GPU (CUDA 11.8+), Ubuntu 22.04 LTS

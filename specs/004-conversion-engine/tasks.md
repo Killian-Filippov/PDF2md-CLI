@@ -3,7 +3,7 @@
 **Feature**: 004-conversion-engine
 **Date**: 2026-01-08
 **Status**: Ready for Implementation
-**Total Tasks**: 78
+**Total Tasks**: 79
 
 ## Task Execution Strategy
 
@@ -265,7 +265,7 @@ Phase 8: Polish & Cross-Cutting Concerns
 
 ---
 
-## Phase 8: Polish & Cross-Cutting Concerns (8 tasks)
+## Phase 8: Polish & Cross-Cutting Concerns (9 tasks)
 
 *Testing, documentation, code quality, performance*
 
@@ -291,11 +291,12 @@ Phase 8: Polish & Cross-Cutting Concerns
 
 **Test Criteria**: Performance tests pass on reference hardware. Conversion time and GPU memory within targets.
 
-### Test Coverage (1 task)
+### Test Coverage (2 tasks)
 
 - [ ] [T078] Run pytest with coverage and ensure >80% code coverage (converter/)
+- [ ] [T079] Write stress test running 100 consecutive conversions and verify no memory leak using torch.cuda.memory_stats() to monitor GPU memory (tests/integration/test_stress.py)
 
-**Test Criteria**: `uv run pytest --cov=pdf2md_converter` shows >80% coverage.
+**Test Criteria**: `uv run pytest --cov=pdf2md_converter` shows >80% coverage. Stress test shows GPU memory returns to baseline after each conversion.
 
 ---
 
@@ -310,8 +311,8 @@ Phase 8: Polish & Cross-Cutting Concerns
 | Phase 5: Story 3 (Images) | 9 | P2 | Image Extraction | Yes (with Phase 6) |
 | Phase 6: Story 4 (Multi-Column) | 6 | P2 | Multi-Column Layout | Yes (with Phase 5) |
 | Phase 7: Story 5 (Encrypted PDFs) | 7 | P3 | Password-Protected Handling | No (after Phase 6) |
-| Phase 8: Polish | 8 | P0 | Cross-Cutting | Yes (with any phase) |
-| **Total** | **78** | | | |
+| Phase 8: Polish | 9 | P0 | Cross-Cutting | Yes (with any phase) |
+| **Total** | **79** | | | |
 
 ### Parallel Execution Strategy
 
@@ -320,7 +321,7 @@ Phase 8: Polish & Cross-Cutting Concerns
 - **Team B**: Phase 4 (User Story 2) - 11 tasks
 - **Team C**: Phase 5 (User Story 3) - 9 tasks (after Phase 3/4)
 - **Team D**: Phase 6 (User Story 4) - 6 tasks (after Phase 3/4)
-- **Team E**: Phase 8 (Polish) - 8 tasks (anytime)
+- **Team E**: Phase 8 (Polish) - 9 tasks (anytime)
 
 **Critical Path**: Phase 1 → Phase 2 → Phase 3 → Phase 7 → Phase 8 (45 tasks for MVP)
 

@@ -95,15 +95,15 @@ Some PDFs are password-protected or encrypted. The engine should detect this and
 
 ## Edge Cases
 
-- What happens if PDF has no pages (empty file)?
-- What happens if PDF has corrupted internal structure?
-- What happens if PDF uses embedded fonts that aren't available?
-- What happens if PDF has rotation or page orientation changes?
-- What happens if PDF has very large pages (e.g., map or poster)?
+- What happens if PDF has no pages (empty file)? → Return `CorruptedPDFError: "PDF has no pages"` (reject immediately)
+- What happens if PDF has corrupted internal structure? → Return `CorruptedPDFError: "PDF file structure is corrupted"` during validation
+- What happens if PDF uses embedded fonts that aren't available? → Accept Marker library's font substitution behavior (no special handling needed)
+- What happens if PDF has rotation or page orientation changes? → Accept Marker library's automatic rotation detection (no special handling needed)
+- What happens if PDF has very large pages (e.g., map or poster)? → Reject with `ConversionError: "Page size exceeds maximum supported dimensions"` if page DPI > 600 or dimensions > 10000x10000 pixels
 - What happens if OCR confidence is very low (<50%)? → Extract text but add Markdown annotation warning of low confidence
-- What happens if PDF has mixed landscape and portrait pages?
+- What happens if PDF has mixed landscape and portrait pages? → Accept Marker library's automatic handling (add integration test T065 for this case)
 - What happens if GPU crashes during conversion? → Conversion fails immediately with "GPU out of memory" error, no CPU fallback
-- What happens if Marker library throws unexpected exception?
+- What happens if Marker library throws unexpected exception? → Wrap in `ConversionError` with details and propagate to server layer
 
 ## Requirements
 
@@ -119,7 +119,7 @@ Some PDFs are password-protected or encrypted. The engine should detect this and
 - **FR-CONV-007**: Engine MUST complete 10-page conversion in under 30 seconds
 
 **OCR and Text Extraction**:
-- **FR-CONV-008**: Engine MUST apply OCR to pages without embedded text
+- **FR-CONV-008**: Engine MUST apply OCR to pages without embedded text by default; if `ocr_all_pages=True` config option is set, apply OCR to ALL pages regardless of text layer presence
 - **FR-CONV-009**: Engine MUST use CUDA-enabled GPU for OCR acceleration
 - **FR-CONV-009a**: Engine MUST verify GPU availability at startup and reject all conversions with "GPU required" error if GPU is not available
 - **FR-CONV-010**: Engine MUST achieve >95% character accuracy on standard text
