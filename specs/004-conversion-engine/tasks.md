@@ -115,29 +115,29 @@ Phase 8: Polish & Cross-Cutting Concerns
 
 ### MarkerConverter Implementation (6 tasks)
 
-- [ ] [T025] [P] [US1] Create `MarkerConverter` class in `marker_converter.py` extending `PDFConverter` ABC (converter/src/pdf2md_converter/marker_converter.py)
-- [ ] [T026] [P] [US1] Implement `_validate_inputs()` in `MarkerConverter` checking PDF exists, output directory writable, page count <= max_pages (converter/src/pdf2md_converter/marker_converter.py)
-- [ ] [T027] [US1] Implement `convert()` method in `MarkerConverter` calling Marker library's `convert_single_pdf()` with config parameters (converter/src/pdf2md_converter/marker_converter.py)
-- [ ] [T028] [US1] Add Markdown output writing in `convert()` method using UTF-8 encoding to `output_path` (converter/src/pdf2md_converter/marker_converter.py)
-- [ ] [T029] [US1] Implement `_cleanup()` method that removes output Markdown file on error (converter/src/pdf2md_converter/marker_converter.py)
-- [ ] [T030] [US1] Collect and return `ConversionMetrics` from `convert()` with pages_processed, conversion_time_seconds, output_size_bytes (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T025] [P] [US1] Create `MarkerConverter` class in `marker_converter.py` extending `PDFConverter` ABC (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T026] [P] [US1] Implement `_validate_inputs()` in `MarkerConverter` checking PDF exists, output directory writable, page count <= max_pages (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T027] [US1] Implement `convert()` method in `MarkerConverter` calling Marker library's `convert_single_pdf()` with config parameters (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T028] [US1] Add Markdown output writing in `convert()` method using UTF-8 encoding to `output_path` (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T029] [US1] Implement `_cleanup()` method that removes output Markdown file on error (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T030] [US1] Collect and return `ConversionMetrics` from `convert()` with pages_processed, conversion_time_seconds, output_size_bytes (converter/src/pdf2md_converter/marker_converter.py)
 
 **Test Criteria**: Calling `converter.convert(valid_text.pdf, output.md)` succeeds, output.md contains Markdown with proper headings, lists, tables.
 
 ### Error Handling (3 tasks)
 
-- [ ] [T031] [US1] Wrap Marker library calls in try/except to catch exceptions and convert to `ConversionError` (converter/src/pdf2md_converter/marker_converter.py)
-- [ ] [T032] [US1] Raise `PageLimitExceededError` if page count exceeds `config.max_pages` (converter/src/pdf2md_converter/marker_converter.py)
-- [ ] [T033] [US1] Log detailed error information before raising exceptions (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T031] [US1] Wrap Marker library calls in try/except to catch exceptions and convert to `ConversionError` (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T032] [US1] Raise `PageLimitExceededError` if page count exceeds `config.max_pages` (converter/src/pdf2md_converter/marker_converter.py)
+- [X] [T033] [US1] Log detailed error information before raising exceptions (converter/src/pdf2md_converter/marker_converter.py)
 
 **Test Criteria**: PDF with 600 pages raises PageLimitExceededError. Corrupted PDF raises CorruptedPDFError.
 
 ### Integration Tests (4 tasks)
 
-- [ ] [T034] [US1] Write integration test for basic PDF conversion verifying Markdown output structure (tests/integration/test_conversion_flow.py)
-- [ ] [T035] [US1] Write integration test for heading hierarchy preservation (tests/integration/test_conversion_flow.py)
-- [ ] [T036] [US1] Write integration test for list conversion (bullet and numbered) (tests/integration/test_conversion_flow.py)
-- [ ] [T037] [US1] Write integration test for table conversion to Markdown table syntax (tests/integration/test_conversion_flow.py)
+- [X] [T034] [US1] Write integration test for basic PDF conversion verifying Markdown output structure (tests/integration/test_conversion_flow.py)
+- [X] [T035] [US1] Write integration test for heading hierarchy preservation (tests/integration/test_conversion_flow.py)
+- [X] [T036] [US1] Write integration test for list conversion (bullet and numbered) (tests/integration/test_conversion_flow.py)
+- [X] [T037] [US1] Write integration test for table conversion to Markdown table syntax (tests/integration/test_conversion_flow.py)
 
 **Test Criteria**: All integration tests pass with sample PDFs. Markdown output matches expected structure.
 
