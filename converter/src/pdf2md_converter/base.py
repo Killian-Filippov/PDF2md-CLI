@@ -2,9 +2,10 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
+
 from pdf2md_converter.config import ConverterConfig
-from pdf2md_converter.models.metrics import ConversionMetrics
 from pdf2md_converter.exceptions import GPUUnavailableError
+from pdf2md_converter.models.metrics import ConversionMetrics
 
 
 class PDFConverter(ABC):

@@ -1,7 +1,8 @@
 """Configuration model for PDF to Markdown conversion engine."""
 
-from pydantic import BaseModel, Field, PositiveInt, field_validator
 from pathlib import Path
+
+from pydantic import BaseModel, Field, PositiveInt, field_validator
 
 
 class ConverterConfig(BaseModel):

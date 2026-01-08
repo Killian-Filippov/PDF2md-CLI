@@ -2,6 +2,7 @@
 
 import logging
 from pathlib import Path
+
 from PIL import Image
 
 logger = logging.getLogger(__name__)

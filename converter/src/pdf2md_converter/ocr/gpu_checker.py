@@ -1,7 +1,6 @@
 """GPU availability and CUDA verification utilities."""
 
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +81,7 @@ def get_gpu_count() -> int:
         return 0
 
 
-def get_gpu_name(device_id: int = 0) -> Optional[str]:
+def get_gpu_name(device_id: int = 0) -> str | None:
     """
     Get the name of a specific GPU.
 
