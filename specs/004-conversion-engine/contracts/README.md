@@ -288,6 +288,7 @@ except ValidationError as e:
 | ocr_enabled | bool | - | True |
 | ocr_all_pages | bool | - | True |
 | gpu_enabled | bool | Requires GPU available if True | True |
+| gpu_device_id | int | >= 0, valid device ID | 0 |
 | gpu_memory_limit_mb | int | >= 100, <= 16384 | 4096 |
 | max_pages | int | >= 1, <= 1000 | 500 |
 | timeout_seconds | int | >= 1, <= 3600 | 300 |

@@ -137,6 +137,26 @@ config = ConverterConfig(gpu_enabled=False)
 converter = MarkerConverter(config)
 ```
 
+### Multi-GPU Configuration
+
+```python
+# Use specific GPU device (for multi-GPU systems)
+config = ConverterConfig(
+    gpu_enabled=True,
+    gpu_device_id=1,  # Use GPU 1 instead of default GPU 0
+    max_pages=500
+)
+
+converter = MarkerConverter(config)
+metrics = converter.convert(Path("large.pdf"), Path("large.md"))
+
+# Check which GPU was used
+print(f"Conversion used GPU {metrics.gpu_device_id}")
+print(f"GPU memory used: {metrics.gpu_memory_used_mb:.0f}MB")
+```
+
+**Note**: For systems with multiple GPUs, you can run concurrent conversions on different GPUs by setting different `gpu_device_id` values for each converter instance.
+
 ---
 
 ## Running Tests
@@ -242,6 +262,7 @@ config = ConverterConfig(
 
     # GPU Settings
     gpu_enabled=True,                      # Use GPU acceleration (required)
+    gpu_device_id=0,                       # GPU device ID (for multi-GPU systems)
     gpu_memory_limit_mb=4096,              # Max GPU memory (fail if exceeded)
 
     # Conversion Limits

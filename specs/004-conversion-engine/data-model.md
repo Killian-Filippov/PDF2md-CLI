@@ -39,6 +39,11 @@ class ConverterConfig(BaseModel):
         default=True,
         description="Use GPU acceleration for OCR (CUDA required)"
     )
+    gpu_device_id: int = Field(
+        default=0,
+        ge=0,
+        description="GPU device ID to use (for multi-GPU systems, e.g., 0 or 1)"
+    )
     gpu_memory_limit_mb: PositiveInt = Field(
         default=4096,
         description="Maximum GPU memory in MB (fail if exceeded)"
@@ -91,6 +96,7 @@ class ConverterConfig(BaseModel):
 
 **Validation Rules**:
 - `gpu_enabled=True` requires GPU available at startup (raises `GPUUnavailableError`)
+- `gpu_device_id` must be a valid GPU device ID (raises `GPUUnavailableError` if device not found)
 - `max_pages` must be <= 1000 (hard limit)
 - `ocr_confidence_threshold` must be between 0.0 and 1.0
 - `image_downscale_threshold` must be >= 100 (minimum practical size)
@@ -123,6 +129,7 @@ class ConversionMetrics:
     ocr_time_seconds: float
 
     # Resource Usage
+    gpu_device_id: int  # GPU device ID used for conversion
     gpu_memory_used_mb: float
     peak_gpu_memory_mb: float
     cpu_time_seconds: float
