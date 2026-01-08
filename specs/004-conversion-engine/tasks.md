@@ -42,10 +42,10 @@ Phase 8: Polish & Cross-Cutting Concerns
 
 *Initialize project structure and dependencies*
 
-- [ ] [T001] Create `converter/` directory structure with `src/pdf2md_converter/`, `tests/`, `models/`, `utils/`, `ocr/` subdirectories (converter/)
-- [ ] [T002] Create `pyproject.toml` with uv configuration, marker-pdf>=0.2.8, torch (CUDA 11.8+), Pillow>=10.0.0, Pydantic>=2.0.0, pikepdf>=8.0.0 (converter/pyproject.toml)
-- [ ] [T003] Create `README.md` with converter overview, architecture diagram, and integration guide (converter/README.md)
-- [ ] [T004] Create `tests/fixtures/test_pdfs/` directory with sample PDFs (valid_text.pdf, scanned.pdf, encrypted.pdf, corrupted.pdf, with_images.pdf, multi_column.pdf) (tests/fixtures/test_pdfs/)
+- [X] [T001] Create `converter/` directory structure with `src/pdf2md_converter/`, `tests/`, `models/`, `utils/`, `ocr/` subdirectories (converter/)
+- [X] [T002] Create `pyproject.toml` with uv configuration, marker-pdf>=0.2.8, torch (CUDA 11.8+), Pillow>=10.0.0, Pydantic>=2.0.0, pikepdf>=8.0.0 (converter/pyproject.toml)
+- [X] [T003] Create `README.md` with converter overview, architecture diagram, and integration guide (converter/README.md)
+- [X] [T004] Create `tests/fixtures/test_pdfs/` directory with sample PDFs (valid_text.pdf, scanned.pdf, encrypted.pdf, corrupted.pdf, with_images.pdf, multi_column.pdf) (tests/fixtures/test_pdfs/)
 
 **Acceptance**: Running `uv sync` in converter/ creates virtual environment and installs all dependencies without errors.
 
@@ -57,51 +57,51 @@ Phase 8: Polish & Cross-Cutting Concerns
 
 ### Configuration & Models (5 tasks)
 
-- [ ] [T005] Create `ConverterConfig` Pydantic model in `config.py` with ocr_enabled, gpu_enabled, max_pages, timeout_seconds, ocr_confidence_threshold, image_downscale_threshold, languages fields (converter/src/pdf2md_converter/config.py)
-- [ ] [T006] Implement validation in `ConverterConfig` for gpu_memory_limit_mb (>=100, <=16384), max_pages (>=1, <=1000), ocr_confidence_threshold (0.0 to 1.0) (converter/src/pdf2md_converter/config.py)
-- [ ] [T007] Create `ConversionMetrics` dataclass in `models/metrics.py` with pages_processed, pages_with_ocr, images_extracted, conversion_time_seconds, gpu_memory_used_mb, low_confidence_pages fields (converter/src/pdf2md_converter/models/metrics.py)
-- [ ] [T008] Add `@property` methods to `ConversionMetrics`: `elapsed_time`, `pages_per_second` (converter/src/pdf2md_converter/models/metrics.py)
-- [ ] [T009] Write unit tests for `ConverterConfig` and `ConversionMetrics` with valid and invalid configurations (tests/unit/test_config.py)
+- [X] [T005] Create `ConverterConfig` Pydantic model in `config.py` with ocr_enabled, gpu_enabled, max_pages, timeout_seconds, ocr_confidence_threshold, image_downscale_threshold, languages fields (converter/src/pdf2md_converter/config.py)
+- [X] [T006] Implement validation in `ConverterConfig` for gpu_memory_limit_mb (>=100, <=16384), max_pages (>=1, <=1000), ocr_confidence_threshold (0.0 to 1.0) (converter/src/pdf2md_converter/config.py)
+- [X] [T007] Create `ConversionMetrics` dataclass in `models/metrics.py` with pages_processed, pages_with_ocr, images_extracted, conversion_time_seconds, gpu_memory_used_mb, low_confidence_pages fields (converter/src/pdf2md_converter/models/metrics.py)
+- [X] [T008] Add `@property` methods to `ConversionMetrics`: `elapsed_time`, `pages_per_second` (converter/src/pdf2md_converter/models/metrics.py)
+- [X] [T009] Write unit tests for `ConverterConfig` and `ConversionMetrics` with valid and invalid configurations (tests/unit/test_config.py)
 
 **Test Criteria**: Config validates correctly, GPU check rejects invalid values, metrics calculate derived properties correctly.
 
 ### Exception Hierarchy (3 tasks)
 
-- [ ] [T010] Create base `ConversionError` exception class in `exceptions.py` with message and details attributes (converter/src/pdf2md_converter/exceptions.py)
-- [ ] [T011] Create `GPUUnavailableError`, `PasswordProtectedError`, `CorruptedPDFError`, `GPUOutOfMemoryError`, `PageLimitExceededError` subclasses of `ConversionError` with error codes (converter/src/pdf2md_converter/exceptions.py)
-- [ ] [T012] Write unit tests for exception hierarchy verifying error codes and message formatting (tests/unit/test_exceptions.py)
+- [X] [T010] Create base `ConversionError` exception class in `exceptions.py` with message and details attributes (converter/src/pdf2md_converter/exceptions.py)
+- [X] [T011] Create `GPUUnavailableError`, `PasswordProtectedError`, `CorruptedPDFError`, `GPUOutOfMemoryError`, `PageLimitExceededError` subclasses of `ConversionError` with error codes (converter/src/pdf2md_converter/exceptions.py)
+- [X] [T012] Write unit tests for exception hierarchy verifying error codes and message formatting (tests/unit/test_exceptions.py)
 
 **Test Criteria**: All exceptions inherit from ConversionError, error codes match specification, messages include troubleshooting hints.
 
 ### GPU Checker (3 tasks)
 
-- [ ] [T013] Create `check_gpu_available()` function in `ocr/gpu_checker.py` using `torch.cuda.is_available()` (converter/src/pdf2md_converter/ocr/gpu_checker.py)
-- [ ] [T014] Implement CUDA version verification in `check_gpu_available()` using `torch.version.cuda` (converter/src/pdf2md_converter/ocr/gpu_checker.py)
-- [ ] [T015] Write unit tests for GPU checker with mock torch.cuda (tests/unit/test_gpu_checker.py)
+- [X] [T013] Create `check_gpu_available()` function in `ocr/gpu_checker.py` using `torch.cuda.is_available()` (converter/src/pdf2md_converter/ocr/gpu_checker.py)
+- [X] [T014] Implement CUDA version verification in `check_gpu_available()` using `torch.version.cuda` (converter/src/pdf2md_converter/ocr/gpu_checker.py)
+- [X] [T015] Write unit tests for GPU checker with mock torch.cuda (tests/unit/test_gpu_checker.py)
 
 **Test Criteria**: Returns True if CUDA 11.8+ available, False otherwise. Logs warnings for missing CUDA.
 
 ### PDF Validation Utilities (4 tasks)
 
-- [ ] [T016] Create `is_pdf_encrypted()` function in `utils/pdf_utils.py` using pikepdf that returns True if PDF has encryption flag (converter/src/pdf2md_converter/utils/pdf_utils.py)
-- [ ] [T017] Create `validate_pdf_structure()` function in `utils/pdf_utils.py` that checks PDF is not corrupted (pikepdf.open() with exception handling) (converter/src/pdf2md_converter/utils/pdf_utils.py)
-- [ ] [T018] Create `get_page_count()` function in `utils/pdf_utils.py` using pikepdf to count pages (converter/src/pdf2md_converter/utils/pdf_utils.py)
-- [ ] [T019] Write unit tests for PDF validation functions with valid, encrypted, and corrupted PDFs (tests/unit/test_pdf_utils.py)
+- [X] [T016] Create `is_pdf_encrypted()` function in `utils/pdf_utils.py` using pikepdf that returns True if PDF has encryption flag (converter/src/pdf2md_converter/utils/pdf_utils.py)
+- [X] [T017] Create `validate_pdf_structure()` function in `utils/pdf_utils.py` that checks PDF is not corrupted (pikepdf.open() with exception handling) (converter/src/pdf2md_converter/utils/pdf_utils.py)
+- [X] [T018] Create `get_page_count()` function in `utils/pdf_utils.py` using pikepdf to count pages (converter/src/pdf2md_converter/utils/pdf_utils.py)
+- [X] [T019] Write unit tests for PDF validation functions with valid, encrypted, and corrupted PDFs (tests/unit/test_pdf_utils.py)
 
 **Test Criteria**: Encrypted PDFs detected, corrupted PDFs raise exceptions, page count accurate.
 
 ### Image Processing Utilities (3 tasks)
 
-- [ ] [T020] Create `downscale_image()` function in `utils/image_utils.py` using Pillow to downscale images > threshold width (converter/src/pdf2md_converter/utils/image_utils.py)
-- [ ] [T021] Implement aspect ratio preservation in `downscale_image()` with LANCZOS resampling filter (converter/src/pdf2md_converter/utils/image_utils.py)
-- [ ] [T022] Write unit tests for image downscaling with various sizes and formats (tests/unit/test_image_utils.py)
+- [X] [T020] Create `downscale_image()` function in `utils/image_utils.py` using Pillow to downscale images > threshold width (converter/src/pdf2md_converter/utils/image_utils.py)
+- [X] [T021] Implement aspect ratio preservation in `downscale_image()` with LANCZOS resampling filter (converter/src/pdf2md_converter/utils/image_utils.py)
+- [X] [T022] Write unit tests for image downscaling with various sizes and formats (tests/unit/test_image_utils.py)
 
 **Test Criteria**: Images >2000px width downscaled to 2000px, aspect ratio preserved, quality maintained.
 
 ### Abstract Base Class (2 tasks)
 
-- [ ] [T023] Create `PDFConverter` abstract base class in `base.py` with `__init__(config)`, `convert()` abstract method, `_validate_inputs()`, `_cleanup()` methods (converter/src/pdf2md_converter/base.py)
-- [ ] [T024] Add `_validate_gpu_availability()` method to `PDFConverter` that calls `check_gpu_available()` and raises `GPUUnavailableError` if needed (converter/src/pdf2md_converter/base.py)
+- [X] [T023] Create `PDFConverter` abstract base class in `base.py` with `__init__(config)`, `convert()` abstract method, `_validate_inputs()`, `_cleanup()` methods (converter/src/pdf2md_converter/base.py)
+- [X] [T024] Add `_validate_gpu_availability()` method to `PDFConverter` that calls `check_gpu_available()` and raises `GPUUnavailableError` if needed (converter/src/pdf2md_converter/base.py)
 
 **Test Criteria**: ABC enforces subclass implementation, GPU validation raises exception when required but unavailable.
 
